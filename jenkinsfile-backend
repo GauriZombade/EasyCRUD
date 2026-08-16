@@ -7,6 +7,10 @@ pipeline {
         maven 'maven'
     }
 
+    environment {
+        my_aws_cred = credentials('aws-cred')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -44,6 +48,25 @@ pipeline {
                 timeout(time: 5, unit: 'MINUTES') {
                     waitForQualityGate abortPipeline: true
                 }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh '''
+                    docker build -t backend .
+                    docker images
+                '''
+            }
+        }
+
+        stage('Push Image To ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 942049393829.dkr.ecr.us-east-2.amazonaws.com
+                    docker tag backend:latest 942049393829.dkr.ecr.us-east-2.amazonaws.com/backend:latest
+                    docker push 942049393829.dkr.ecr.us-east-2.amazonaws.com/backend:latest
+                '''
             }
         }
     }

@@ -53,10 +53,12 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                sh '''
+                dir('backend') {
+                  sh '''
                     docker build -t backend .
                     docker images
-                '''
+                  '''
+                }
             }
         }
 

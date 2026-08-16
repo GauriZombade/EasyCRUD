@@ -9,5 +9,21 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
             }
         }
+
+        stage('Build') {
+            steps {
+                dir('backend') {
+                    sh '''
+                        mvn clean package 
+                    '''
+                }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
+                }
+            }
+        }
     }
 }
+

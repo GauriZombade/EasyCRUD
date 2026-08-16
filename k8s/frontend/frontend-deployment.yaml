@@ -19,6 +19,6 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: 942049393829.dkr.ecr.us-east-2.amazonaws.com/frontend:12
+          image: 942049393829.dkr.ecr.us-east-2.amazonaws.com/frontend:13
           ports:
             - containerPort: 80

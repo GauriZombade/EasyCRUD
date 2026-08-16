@@ -3,6 +3,10 @@ pipeline {
         label 'worker'
     }
 
+    tools {
+        maven 'maven'
+    }
+
     stages {
         stage('Checkout') {
             steps {

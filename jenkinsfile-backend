@@ -9,12 +9,13 @@ pipeline {
 
     environment {
         my_aws_cred = credentials('aws-cred')
+        ECR_REPO = '942049393829.dkr.ecr.us-east-2.amazonaws.com/backend'
     }
 
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
+                git branch: 'main', credentialsId: 'github-cred-pat', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
             }
         }
 
@@ -55,7 +56,7 @@ pipeline {
             steps {
                 dir('backend') {
                   sh '''
-                    docker build -t backend .
+                    docker build -t backend:${BUILD_NUMBER} .
                     docker images
                   '''
                 }
@@ -66,9 +67,42 @@ pipeline {
             steps {
                 sh '''
                     aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 942049393829.dkr.ecr.us-east-2.amazonaws.com
-                    docker tag backend:latest 942049393829.dkr.ecr.us-east-2.amazonaws.com/backend:latest
-                    docker push 942049393829.dkr.ecr.us-east-2.amazonaws.com/backend:latest
+                    docker tag backend:${BUILD_NUMBER} ${ECR_REPO}:${BUILD_NUMBER}
+                    docker push ${ECR_REPO}:${BUILD_NUMBER}
                 '''
+            }
+        }
+
+        stage('Update k8s Manifests') {
+            steps {
+                sh '''
+                    sed -i "s|image: .*|image: ${ECR_REPO}:${BUILD_NUMBER}|" k8s/backend/backend-deployment.yaml
+                '''
+            }
+        }
+
+        stage('Push Changes To GitHub') {
+            steps {
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-cred-pat',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )
+                ]) {
+
+                    sh '''
+                        git config user.name "mayurpandit25"
+                        git config user.email "panditmayur888@gmail.com"
+
+                        git add k8s/backend/backend-deployment.yaml
+
+                        git commit -m "Update backend image to ${BUILD_NUMBER}" || true
+
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/mayurpandit25/EasyCRUD.git HEAD:main
+                    '''
+                }
             }
         }
     }

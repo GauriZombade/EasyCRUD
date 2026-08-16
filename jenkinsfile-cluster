@@ -4,7 +4,7 @@ pipeline {
     }
 
     environment {
-        my_aws_access = credentials('aws-access')
+        my_aws_access = credentials('aws-cred')
     }
 
     tools {

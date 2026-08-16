@@ -4,82 +4,14 @@ pipeline {
     }
 
     environment {
-        my_aws_access = credentials('aws-access')
+        my_aws_cred = credentials('aws-cred')
     }
 
     stages {
-        stage('checkout') {
-            steps {
-                git branch: 'main', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
-                echo 'clonning is successful'
+        stage('Checkout') {
+            steps{
+                git branch: 'main', credentialsId: 'github-cred-pat', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
             }
-        }
-
-        stage('Build') {
-            steps {
-                dir('frontend') {
-                    sh 'npm install'
-                    sh 'npm run build'
-                }
-                echo 'Build is successful'
-            }
-            post {
-                success {
-                    archiveArtifacts artifacts: 'frontend/dist/**', fingerprint: true
-                }
-            }
-        }
-
-        stage('Build With Docker') {
-            steps {
-                dir('frontend') {
-                    sh 'docker build -t frontend .'
-                    sh 'docker images'
-                }
-                echo 'Docker image build is successful'
-            }
-        }
-
-        stage('Push Image To ECR') {
-            steps {
-                script {
-                    sh '''
-                    aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 506995420953.dkr.ecr.us-east-2.amazonaws.com
-                    docker tag frontend:latest 506995420953.dkr.ecr.us-east-2.amazonaws.com/frontend:latest
-                    docker push 506995420953.dkr.ecr.us-east-2.amazonaws.com/frontend:latest
-                    '''
-                }
-            }
-        }
-
-        stage('Deploy To EKS') {
-            steps {
-                dir('frontend') {
-                    sh '''
-                    aws eks update-kubeconfig --region us-east-2 --name my-eks-cluster1 
-                    kubectl apply -f frontend-deployment.yaml
-                    kubectl apply -f frontend-svc.yaml
-                    kubectl get pods
-                    sleep 30
-                    kubectl get pods
-                    sleep 20
-                    kubectl get pods -o wide
-                    kubectl get svc -o wide
-                    '''
-                }
-            }
-        }
-    }
-
-    post {
-        success {
-            echo 'Pipeline succeeded.'
-        }
-        failure {
-            echo 'Pipeline failed.'
         }
     }
 }
-
-
-

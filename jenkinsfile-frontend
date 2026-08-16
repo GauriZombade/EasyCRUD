@@ -51,6 +51,38 @@ pipeline {
                 '''
             }
         }
+
+        stage('Update k8s Manifest') {
+            steps {
+                sh '''
+                sed -i "s|image: .*|image: ${ECR_REPO}:${BUILD_NUMBER}|" k8s/frontend/frontend-deployment.yaml
+                '''
+            }
+        }
+
+        stage('Push Changes To GitHub') {
+            steps {
+
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'github-cred-pat',
+                        usernameVariable: 'GIT_USERNAME',
+                        passwordVariable: 'GIT_PASSWORD'
+                    )
+                ]) {
+
+                    sh '''
+                        git config user.name "mayurpandit25"
+                        git config user.email "panditmayur888@gmail.com"
+
+                        git add k8s/frontend/frontend-deployment.yaml
+
+                        git commit -m "Update frontend image to ${BUILD_NUMBER}" || true
+
+                        git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/mayurpandit25/EasyCRUD.git HEAD:main
+                    '''
+                }
+            }
+        }
     }
 }
-

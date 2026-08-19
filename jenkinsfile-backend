@@ -22,7 +22,7 @@ pipeline {
             }
             post{
                 success{
-                    archiveArtifacts artifact: 'backend/target/*.jar', fingerprint: true
+                    archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
                 }
             }
         }

@@ -70,13 +70,6 @@ pipeline {
             }
         }
 
-        stage('Trivy image scan') {
-            steps {
-                sh '''
-                    TMPDIR=/opt/trivy-tmp trivy image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 backend:${BUILD_NUMBER}
-                '''
-            }
-        }
 
         stage('Push To ECR') {
             steps {

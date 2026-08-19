@@ -20,8 +20,8 @@ pipeline {
                     sh 'mvn clean package'
                 }
             }
-            post{
-                success{
+            post {
+                success {
                     archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
                 }
             }

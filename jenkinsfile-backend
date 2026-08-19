@@ -36,7 +36,7 @@ pipeline {
             steps {
                 sh '''
                     sudo snap install aws-cli --classic
-                    aws s3 cp backend/target/*.jar s3://mayurcbz.spacee/Artifact/student.war
+                    aws s3 cp backend/target/*.jar s3://mayurcbz.spacee/Artifact/student.jar
                 '''
             }
         }
@@ -67,6 +67,14 @@ pipeline {
                         docker images
                     '''
                 }
+            }
+        }
+
+        stage('Trivy image scan') {
+            steps {
+                sh '''
+                    trivy image --severity HIGH,CRITICAL --exit-code 1 backend:${BUILD_NUMBER}
+                '''
             }
         }
 

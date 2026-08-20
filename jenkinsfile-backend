@@ -111,5 +111,10 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            cleanWs()
+        }
+    }
 }
 

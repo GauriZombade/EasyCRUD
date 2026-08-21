@@ -88,7 +88,6 @@ pipeline {
 
         stage("Push change to GITHUB"){
             steps {
-
                 withCredentials([
                     usernamePassword(
                         credentialsId: "github-cred",
@@ -103,12 +102,14 @@ pipeline {
 
                         git add k8s/frontend/frontend-deployment.yaml
                         git commit -m "Update frontend-deployment"
+                        git pull
                         git push https://${GIT_USERNAME}:${GIT_PASSWORD}@github.com/mayurpandit25/EasyCRUD.git HEAD:main
                     '''
                 }
             }
         }
     }
+
     post {
         success {
             cleanWs()

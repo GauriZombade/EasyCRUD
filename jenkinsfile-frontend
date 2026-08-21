@@ -1,0 +1,11 @@
+pipeline {
+    agent {
+        label "worker"
+    }
+
+    stages {
+        stage('Checkout') {
+            git branch: "main", credentialsId: "github-cred", url: "https://github.com/mayurpandit25/EasyCRUD.git"
+        }
+    }
+}

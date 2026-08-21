@@ -44,6 +44,7 @@ pipeline {
             steps {
                 dir('frontend') {
                     sh '''
+                    docker rmi -f $(docker images -q)
                     docker build -t frontend:${BUILD_NUMBER} .
                     docker images
                     '''
@@ -108,9 +109,12 @@ pipeline {
             }
         }
     }
+    post {
+        success {
+            cleanWs()
+        }
+    }
 }
-
-
 
 
 

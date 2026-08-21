@@ -112,8 +112,8 @@ pipeline {
             steps {
                 sh '''
                     sudo aws eks update-kubeconfig --name my-eks-cluster1 --region us-west-2
-                    kubectl apply -f argocd/frontend-application.yaml
-                    kubectl get application -n argocd
+                    sudo kubectl apply -f argocd/frontend-application.yaml
+                    sudo kubectl get application -n argocd
                 '''
             }
         }

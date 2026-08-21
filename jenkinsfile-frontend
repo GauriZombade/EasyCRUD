@@ -5,6 +5,7 @@ pipeline {
 
     environment {
         MY_AWS_CRED = credentials('aws-access')
+        ECR_REPO = "525382241025.dkr.ecr.us-west-2.amazonaws.com/frontend"
     }
 
     stages {
@@ -62,6 +63,16 @@ pipeline {
             steps {
                 timeout(time: 30 , unit: "MINUTES")
                     input message: "Deployment to kubernetes?", ok: "Approve"
+            }
+        }
+
+        stage('Push image to ECR') {
+            steps {
+                sh '''
+                    aws ecr get-login-password --region us-west-2 | docker login --username AWS --password-stdin 525382241025.dkr.ecr.us-west-2.amazonaws.com
+                    docker tag frontend:${BUILD_NUMBER} ${ECR_REPO}:${BUILD_NUMBER}
+                    docker push ${ECR_REPO}:${BUILD_NUMBER}
+                '''
             }
         }
     }

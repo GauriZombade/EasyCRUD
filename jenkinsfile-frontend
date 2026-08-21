@@ -10,6 +10,17 @@ pipeline {
 
             }
         }
+
+        stage('Build-frontend') {
+            steps {
+                dir('frontend') {
+                    sh '''
+                        npm install 
+                        npm run build
+                    '''
+                }
+            }
+        }
     }
 }
 

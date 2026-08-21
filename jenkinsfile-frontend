@@ -61,8 +61,9 @@ pipeline {
 
         stage('Approval') {
             steps {
-                timeout(time: 30 , unit: "MINUTES")
-                    input message: "Deployment to kubernetes?", ok: "Approve"
+                timeout(time: 30 , unit: "MINUTES") {
+                    input message: 'Deployment to kubernetes?', ok: 'Approve'
+                }
             }
         }
 

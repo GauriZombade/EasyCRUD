@@ -127,11 +127,16 @@ pipeline {
             }
         }
     }
-    
+
     post {
         success {
             cleanWs()
         }
     }
 }
+
+
+
+
+
 

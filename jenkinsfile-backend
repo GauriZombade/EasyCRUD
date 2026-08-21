@@ -126,11 +126,20 @@ pipeline {
                 }
             }
         }
+
+        stage('Update Argocd') {
+            steps {
+                sh '''
+                sudo aws eks update-kubeconfig --name my-eks-cluster1 --region us-west-2
+                sudo kubectl apply -f argocd/backend-application.yaml
+                sudo kubectl get application -n argocd
+            }
+        }
     }
 
     post {
         success {
-            cleanWs()
+          cleanWs()
         }
     }
 }

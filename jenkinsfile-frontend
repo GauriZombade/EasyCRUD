@@ -3,6 +3,10 @@ pipeline {
         label "worker"
     }
 
+    environment {
+        MY_AWS_CRED = credentials('aws-access')
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -19,6 +23,19 @@ pipeline {
                         npm run build
                     '''
                 }
+            }
+            post {
+                success {
+                    archiveArtifacts artifacts: 'frontend/dist/**' fingerprint: true
+                }
+            }
+        }
+
+        stage('Push artifacts to s3') {
+            steps {
+                sh '''
+                    aws s3 sync frontend/dist s3://mayurcbz.spacee
+                '''
             }
         }
     }

@@ -22,10 +22,10 @@ spec:
       containers: 
 <<<<<<< HEAD
       - name: backend-cont
-        image: 525382241025.dkr.ecr.us-west-2.amazonaws.com/backend:30
+        image: 525382241025.dkr.ecr.us-west-2.amazonaws.com/backend:33
 =======
       - name: nginx-cont
-        image: 525382241025.dkr.ecr.us-west-2.amazonaws.com/backend:32
+        image: 525382241025.dkr.ecr.us-west-2.amazonaws.com/backend:33
 >>>>>>> 476edf2f8769df1dcae897718b0746be0f264b68
         ports:
           - containerPort: 8080

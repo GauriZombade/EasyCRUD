@@ -5,7 +5,7 @@ metadata:
   labels: 
     app: backend 
 spec: 
-  replicas: 2
+  replicas: 10
   strategy:
     type: RollingUpdate
     rollingUpdate: 

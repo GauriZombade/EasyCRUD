@@ -55,7 +55,7 @@ pipeline {
         stage('Trivy Image scanning') {
             steps {
                 sh '''
-                    TEMPDIR=/opt/temp trivy image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 frontend:${BUILD_NUMBER}
+                    trivy image --scanners vuln --severity HIGH,CRITICAL --exit-code 0 frontend:${BUILD_NUMBER}
                 '''
             }
         }

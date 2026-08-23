@@ -14,7 +14,7 @@ pipeline {
     stages{
         stage('Checkout') {
             steps {
-                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/mayurpandit25/EasyCRUD.git'
+                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/GauriZombade/EasyCRUD.git'
             }
         }
 

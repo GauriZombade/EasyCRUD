@@ -72,7 +72,7 @@ pipeline {
         stage('Push image to ECR') {
             steps {
                 sh '''
-                    aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 673498377906.dkr.ecr.eu-north-1.amazonaws.com
+                   aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 673498377906.dkr.ecr.eu-north-1.amazonaws.com
                     docker tag frontend:${BUILD_NUMBER} ${ECR_REPO}:${BUILD_NUMBER}
                     docker push ${ECR_REPO}:${BUILD_NUMBER}
                 '''
@@ -118,11 +118,10 @@ pipeline {
                     sudo kubectl get application -n argocd
                 '''
             }
-     }
+        }
 
     }
-
-    
+     
     
 }
             

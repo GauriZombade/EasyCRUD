@@ -76,6 +76,15 @@ pipeline {
                 }
             }
         }
+        stage('Docker Push') {
+          steps {
+                sh '''
+                    aws ecr get-login-password --region eu-north-1 | docker login --username AWS --password-stdin 673498377906.dkr.ecr.eu-north-1.amazonaws.com
+                    docker tag backend:${BUILD_NUMBER} ${ECR_REPO}:${BUILD_NUMBER}
+                    docker push ${ECR_REPO}:${BUILD_NUMBER}
+                '''
+            }
+        }
     }
 
 

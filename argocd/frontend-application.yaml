@@ -8,7 +8,7 @@ spec:
   project: default
 
   source:
-    repoURL: https://github.com/mayurpandit25/EasyCRUD.git
+    repoURL: https://github.com/GauriZombade/EasyCRUD.git
     targetRevision: main
     path: k8s/frontend
 

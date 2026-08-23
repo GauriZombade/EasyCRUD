@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Checkout'){
             steps {
-                git branch: 'main', credentialsId: 'github-cred', url: 'https://github.com/GauriZombade/EasyCRUD.git'
+                git branch: 'main', credentialsId:'github-cred', url: 'https://github.com/GauriZombade/EasyCRUD.git'
             }
         }
 
@@ -105,7 +105,7 @@ pipeline {
                 ]){
                     sh '''
                       git config user.name "GauriZombade"
-                        git config user.email "gaurizombade22@gmail.com"
+                        git config user.email "zombadegauri02@gmail.com"
 
                         git add k8s/backend/backend-deployment.yaml
                         git commit -m "Update backend-deployment"
